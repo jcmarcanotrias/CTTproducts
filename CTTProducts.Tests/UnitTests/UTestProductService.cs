@@ -6,9 +6,9 @@ using Moq;
 
 namespace CTTProducts.Tests.UnitTests;
 
-public class UnitProductService
+public class UTestProductService
 {
-    public UnitProductService() { }
+    public UTestProductService() { }
 
     [Fact]
     public async Task GetProductByIdAsync_ReturnsProduct()
