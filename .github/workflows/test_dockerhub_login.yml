@@ -13,5 +13,5 @@ jobs:
   
       - name: Try to login to DockerHub
         run: |
-          echo: "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
           echo "Login successful!"
