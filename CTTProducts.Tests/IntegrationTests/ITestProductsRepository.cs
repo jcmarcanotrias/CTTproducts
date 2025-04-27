@@ -1,5 +1,6 @@
 ﻿using CTTproducts;
 using CTTproducts.Models;
+using CTTproducts.Repository;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -9,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace CTTProducts.Tests.IntegrationTests
 {
-    public class ITestProductsRepository
+    public class ITestProductsRepository:IClassFixture<MongoDbFixture>
     {
-        private IMongoDatabase _database;
-        private IMongoCollection<Product> _collection;
-        private const string MONGODB_CONNECTION_STRING = "mongodb://localhost:27017";
+        private readonly MongoDbFixture _mongoDbFixture;
+        private readonly IProductRepository _repository;
+        private readonly IMongoCollection<Product> _productCollection;
 
-        public ITestProductsRepository() 
+        public ITestProductsRepository(MongoDbFixture mongoDbFixture) 
         {
-            var client = new MongoClient(MONGODB_CONNECTION_STRING);
-            _database = client.GetDatabase("TestDatabase");
-            _collection = _database.GetCollection<Product>("Products");
+            _mongoDbFixture = mongoDbFixture;
+            _repository = _mongoDbFixture.Repository;
+            _productCollection = _mongoDbFixture.Database.GetCollection<Product>("Products");
         }
 
         [Fact]
@@ -42,11 +43,11 @@ namespace CTTProducts.Tests.IntegrationTests
                    ],
                 Price = 2.0f
             };
-            await _collection.InsertOneAsync(product);
+                        
+            await _productCollection.InsertOneAsync(product);
 
             // Act  
-            var repository = new ProductsRepository(new MongoClient(MONGODB_CONNECTION_STRING));
-            var result = await repository.GetProductByIdAsync(productId);
+            var result = await _repository.GetProductByIdAsync(productId);
 
             // Assert  
             Assert.NotNull(result);

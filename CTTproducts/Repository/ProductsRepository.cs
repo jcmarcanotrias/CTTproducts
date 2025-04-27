@@ -1,21 +1,24 @@
 ﻿using CTTproducts.Models;
-using CTTproducts.Repository;
 using MongoDB.Driver;
 
-namespace CTTproducts
+namespace CTTproducts.Repository
 {
     public class ProductsRepository : IProductRepository
-    {
-        private MongoClient mongoClient;
+    {        
+        private const string PRODUCTS_COLLECTION_NAME = "Products";
 
-        public ProductsRepository(MongoClient mongoClient)
+        private IMongoDatabase _database;
+        private IMongoCollection<Product> _products;
+
+        public ProductsRepository(MongoClient mongoClient, string dataBaseName)
         {
-            this.mongoClient = mongoClient;
+            _database = mongoClient.GetDatabase(dataBaseName);
+            _products = _database.GetCollection<Product>(PRODUCTS_COLLECTION_NAME);
         }
 
-        public Task<Product> GetProductByIdAsync(Guid productId)
+        public async Task<Product> GetProductByIdAsync(Guid productId)
         {
-            throw new NotImplementedException();
+            return await _products.Find(x => x.Id == productId).FirstOrDefaultAsync();
         }
     }
 }
