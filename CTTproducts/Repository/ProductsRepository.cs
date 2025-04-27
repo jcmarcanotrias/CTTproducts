@@ -20,5 +20,10 @@ namespace CTTproducts.Repository
         {
             return await _products.Find(x => x.Id == productId).FirstOrDefaultAsync();
         }
+
+        public Task InsertProductAsync(Product expectedProduct)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
