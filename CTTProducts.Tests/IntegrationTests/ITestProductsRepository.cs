@@ -32,7 +32,7 @@ namespace CTTProducts.Tests.IntegrationTests
             {
                 Id = productId,
                 Stock = 0,
-                Description = "Test Product",
+                Description = "Test Product 1",
                 Categories =
                    [
                        new Category
@@ -48,6 +48,36 @@ namespace CTTProducts.Tests.IntegrationTests
 
             // Act  
             var result = await _repository.GetProductByIdAsync(productId);
+
+            // Assert  
+            Assert.NotNull(result);
+            Assert.Equal(product.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task InsertProductAsync_InsertProduct()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var product = new Product
+            {
+                Id = productId,
+                Stock = 0,
+                Description = "Test Product 2",
+                Categories =
+                   [
+                       new Category
+                       {
+                           Id = Guid.NewGuid(),
+                           Name = "Category 2"
+                       }
+                   ],
+                Price = 2.0f
+            };
+
+            // Act  
+            await _repository.InsertProductAsync(product);
+            var result = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
 
             // Assert  
             Assert.NotNull(result);
