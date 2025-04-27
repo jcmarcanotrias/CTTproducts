@@ -29,11 +29,6 @@ namespace CTTproducts.Services
             {
                 throw new ArgumentNullException(nameof(product), "Product cannot be null.");
             }
-
-            if (product.Id == Guid.Empty)
-            {
-                throw new ArgumentException("Product ID cannot be empty.", nameof(product.Id));
-            }
             // Other validations can be added here as needed
 
             await _productRepository.InsertProductAsync(product);

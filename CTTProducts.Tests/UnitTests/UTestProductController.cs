@@ -15,14 +15,14 @@ namespace CTTProducts.Tests.UnitTests
             var productId = Guid.NewGuid();
             var expectedProduct = new Product
             {
-                Id = productId,
+                Id = productId.ToString(),
                 Stock = 0,
                 Description = "Test Product 1",
                 Categories = new[]
                 {
                             new Category
                             {
-                                Id = Guid.NewGuid(),
+                                Id = Guid.NewGuid().ToString(),
                                 Name = "Category 1"
                             }
                         },
@@ -35,7 +35,7 @@ namespace CTTProducts.Tests.UnitTests
             IProductController productController = new ProductController(productService.Object);
 
             // Act  
-            var result = await productController.GetProductByIdAsync(productId);
+            var result = await productController.GetProductByIdAsync(productId.ToString());
 
             // Assert  
             Assert.NotNull(result);
@@ -56,7 +56,7 @@ namespace CTTProducts.Tests.UnitTests
             IProductController productController = new ProductController(productService.Object);
 
             // Act  
-            var result = await productController.GetProductByIdAsync(productId);
+            var result = await productController.GetProductByIdAsync(productId.ToString());
 
             // Assert  
             Assert.NotNull(result);
@@ -67,18 +67,31 @@ namespace CTTProducts.Tests.UnitTests
         [Fact]
         public async Task InsertProductAsync_InsertProduct()
         {
-            // Arrange
-            var productId = Guid.NewGuid();
+            // Arrange            
+            var productPost = new ProductPost
+            {
+                Description = "Test Product 2",
+                Categories = new[]
+                {
+                            new Category
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Name = "Category 2"
+                            }
+                        },
+                Price = 3.0f
+            };
+
             var product = new Product
             {
-                Id = productId,
+                Id = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 Stock = 0,
                 Description = "Test Product 2",
                 Categories = new[]
                 {
                             new Category
                             {
-                                Id = Guid.NewGuid(),
+                                Id = Guid.NewGuid().ToString(),
                                 Name = "Category 2"
                             }
                         },
@@ -91,10 +104,10 @@ namespace CTTProducts.Tests.UnitTests
             IProductController productController = new ProductController(productService.Object);
 
             // Act  
-            await productController.InsertProductAsync(product);
+            var result = await productController.InsertProductAsync(productPost);
 
             // Assert  
-            productService.Verify(repo => repo.InsertProductAsync(product), Times.Once);
+            productService.Verify(repo => repo.InsertProductAsync(It.IsAny<Product>()), Times.Once);
         }
     }
 }

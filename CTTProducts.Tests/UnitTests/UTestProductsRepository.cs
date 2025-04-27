@@ -13,14 +13,14 @@ public class UTestProductsRepository
         var productId = Guid.NewGuid();
         var expectedProduct = new Product
         {
-            Id = productId,
+            Id = productId.ToString(),
             Stock = 0,
             Description = "Test Product 1",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 1"
                    }
                ],
@@ -58,17 +58,16 @@ public class UTestProductsRepository
     public async Task InsertProductAsync_InsertProduct()
     {
         // Arrange
-        var productId = Guid.NewGuid();
         var product = new Product
         {
-            Id = productId,
+            Id = "",
             Stock = 0,
             Description = "Test Product 2",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 2"
                    }
                ],

@@ -6,7 +6,7 @@ namespace CTTproducts.Controllers;
 
 public interface IProductController
 {
-    Task<ActionResult<Product?>> GetProductByIdAsync(Guid productId);
+    Task<ActionResult<Product?>> GetProductByIdAsync(string productId);
 
-    Task<ActionResult> InsertProductAsync(Product product);
+    Task<ActionResult> InsertProductAsync(ProductPost productPost);
 }

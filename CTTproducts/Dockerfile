@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./publish .
 
 # Exponemos el puerto donde la app estará disponible
-EXPOSE 80
+EXPOSE 8080
 
 # Establecemos el comando de inicio de la aplicación
 ENTRYPOINT ["dotnet", "CTTproducts.dll"]

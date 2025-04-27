@@ -6,7 +6,7 @@ namespace CTTproducts.Models
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.String)]
-        public Guid Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         public int Stock { get; set; } = 0;
 

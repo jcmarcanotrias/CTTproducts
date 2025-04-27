@@ -19,7 +19,7 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> GetProductByIdAsync(Guid productId)
     {
         // Validations can be added here as needed
-        return await _products.Find(x => x.Id == productId).FirstOrDefaultAsync();
+        return await _products.Find(x => x.Id == productId.ToString()).FirstOrDefaultAsync();
     }
 
     public async Task InsertProductAsync(Product product)
@@ -29,10 +29,7 @@ public class ProductRepository : IProductRepository
             throw new ArgumentNullException(nameof(product), "Product cannot be null.");
         }
 
-        if (product.Id == Guid.Empty)
-        {
-            throw new ArgumentException("Product ID cannot be empty.", nameof(product.Id));
-        }
+        product.Id = Guid.NewGuid().ToString();
         // Validations can be added here as needed
 
         await _products.InsertOneAsync(product);

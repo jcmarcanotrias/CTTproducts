@@ -22,17 +22,16 @@ public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
     public async Task GetProductByIdAsync_ReturnsProduct()
     {
         // Arrange  
-        var productId = Guid.NewGuid();
         var product = new Product
         {
-            Id = productId,
+            Id = Guid.NewGuid().ToString(),
             Stock = 0,
             Description = "Test Product 1",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 1"
                    }
                ],
@@ -42,7 +41,7 @@ public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
         await _productCollection.InsertOneAsync(product);
 
         // Act  
-        var result = await _repository.GetProductByIdAsync(productId);
+        var result = await _repository.GetProductByIdAsync(Guid.Parse(product.Id));
 
         // Assert  
         Assert.NotNull(result);
@@ -53,17 +52,16 @@ public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
     public async Task InsertProductAsync_InsertProduct()
     {
         // Arrange
-        var productId = Guid.NewGuid();
         var product = new Product
         {
-            Id = productId,
+            Id = "",
             Stock = 0,
             Description = "Test Product 2",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 2"
                    }
                ],
@@ -72,7 +70,7 @@ public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
 
         // Act  
         await _repository.InsertProductAsync(product);
-        var result = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
+        var result = await _productCollection.Find(x => x.Id == product.Id).FirstOrDefaultAsync();
 
         // Assert  
         Assert.NotNull(result);

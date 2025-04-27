@@ -17,14 +17,14 @@ public class UTestProductService
         var productId = Guid.NewGuid();
         var expectedProduct = new Product
         {
-            Id = productId,
+            Id = productId.ToString(),
             Stock = 0,
             Description = "Test Product 1",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 1"
                    }
                ],
@@ -32,7 +32,7 @@ public class UTestProductService
         };
 
         var mockRepository = new Mock<IProductRepository>();
-        mockRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(expectedProduct);
+        mockRepository.Setup(repo => repo.GetProductByIdAsync(Guid.Parse(expectedProduct.Id))).ReturnsAsync(expectedProduct);
 
         IProductService productService = new ProductService(mockRepository.Object);
 
@@ -64,18 +64,17 @@ public class UTestProductService
     [Fact]
     public async Task InsertProductAsync_InsertProduct()
     {
-        // Arrange
-        var productId = Guid.NewGuid();
+        // Arrange        
         var product = new Product
         {
-            Id = productId,
+            Id = "",
             Stock = 0,
             Description = "Test Product 2",
             Categories =
                [
                    new Category
                    {
-                       Id = Guid.NewGuid(),
+                       Id = Guid.NewGuid().ToString(),
                        Name = "Category 2"
                    }
                ],
