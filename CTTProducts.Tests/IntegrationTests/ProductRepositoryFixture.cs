@@ -1,5 +1,6 @@
 ﻿using CTTproducts.Models;
 using CTTproducts.Repository;
+using Mongo2Go;
 using MongoDB.Driver;
 
 namespace CTTProducts.Tests.IntegrationTests;
@@ -7,7 +8,7 @@ namespace CTTProducts.Tests.IntegrationTests;
 public class ProductRepositoryFixture : IDisposable
 {
 
-    private const string DATABASE_CONNECTION_STRING = "mongodb://localhost:27017";
+    private MongoDbRunner _mongoDbRunner;
     private const string DATABASE_NAME = "CTTProductsTest";
     private const string PRODUCTS_COLLECTION_NAME = "Products";
 
@@ -16,7 +17,9 @@ public class ProductRepositoryFixture : IDisposable
 
     public ProductRepositoryFixture() 
     {
-        var mongoclient = new MongoClient(DATABASE_CONNECTION_STRING);
+        _mongoDbRunner = MongoDbRunner.Start();
+
+        var mongoclient = new MongoClient(_mongoDbRunner.ConnectionString);
         
         Database = mongoclient.GetDatabase(DATABASE_NAME);
         var collection = Database.GetCollection<Product>(PRODUCTS_COLLECTION_NAME);
@@ -27,6 +30,6 @@ public class ProductRepositoryFixture : IDisposable
 
     public void Dispose()
     {
-        Database.DropCollection(PRODUCTS_COLLECTION_NAME);
+        _mongoDbRunner.Dispose();
     }
 }
