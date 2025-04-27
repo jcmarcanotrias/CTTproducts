@@ -13,6 +13,7 @@ public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
     public ITestProductRepository(ProductRepositoryFixture productRepositoryFixture) 
     {
         _productRepositoryFixture = productRepositoryFixture;
+        _productRepositoryFixture.Init("TestRepo");
         _repository = _productRepositoryFixture.Repository;
         _productCollection = _productRepositoryFixture.Database.GetCollection<Product>("Products");
     }
