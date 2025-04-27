@@ -39,6 +39,22 @@ public class UTestProductsRepository
     }
 
     [Fact]
+    public async Task GetProductByIdAsync_ReturnsNull()
+    {
+        // Arrange  
+        var productId = Guid.NewGuid();
+        Product? expectedProduct = null;
+        var mockRepository = new Mock<IProductRepository>();
+        mockRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(expectedProduct);
+
+        // Act  
+        var result = await mockRepository.Object.GetProductByIdAsync(productId);
+
+        // Assert  
+        Assert.Null(result);
+    }
+
+    [Fact]
     public async Task InsertProductAsync_InsertProduct()
     {
         // Arrange

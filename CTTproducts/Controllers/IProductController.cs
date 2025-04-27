@@ -1,11 +1,12 @@
 ﻿
 using CTTproducts.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CTTproducts.Controllers;
 
 public interface IProductController
 {
-    Task<Product> GetProductByIdAsync(Guid productId);
+    Task<ActionResult<Product?>> GetProductByIdAsync(Guid productId);
 
-    Task InsertProductAsync(Product product);
+    Task<ActionResult> InsertProductAsync(Product product);
 }

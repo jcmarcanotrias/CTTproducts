@@ -1,6 +1,7 @@
 ﻿using CTTproducts.Controllers;
 using CTTproducts.Models;
 using CTTproducts.Services;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace CTTProducts.Tests.IntegrationTests
         {
             // Arrange
             var productId = Guid.NewGuid();
-            var product = new Product
+            var expectedProduct = new Product
             {
                 Id = productId,
                 Stock = 0,
@@ -40,7 +41,7 @@ namespace CTTProducts.Tests.IntegrationTests
                    ],
                 Price = 2.0f
             };
-            await _productCollection.InsertOneAsync(product);
+            await _productCollection.InsertOneAsync(expectedProduct);
             var _productService = new ProductService(_productRepositoryFixture.Repository);
             var productController = new ProductController(_productService);
 
@@ -49,7 +50,11 @@ namespace CTTProducts.Tests.IntegrationTests
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(product.Id, result.Id);
+            Assert.NotNull(result.Result);
+            Assert.Equal(200, ((OkObjectResult)result.Result).StatusCode);
+            var resultProduct = ((OkObjectResult)result.Result).Value as Product;
+            Assert.NotNull(resultProduct);
+            Assert.Equal(expectedProduct.Id, resultProduct.Id);
         }
 
         [Fact]

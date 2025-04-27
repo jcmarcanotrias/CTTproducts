@@ -17,16 +17,28 @@ public class ProductController : ControllerBase, IProductController
     }
 
     [HttpGet]
-    public async Task<Product> GetProductByIdAsync(Guid productId)
+    public async Task<ActionResult<Product?>> GetProductByIdAsync(Guid productId)
     {
-        // Validate the productId before fetching
-        return await _productService.GetProductByIdAsync(productId);
+        var product = await _productService.GetProductByIdAsync(productId);
+        if(product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(product);
     }
 
     [HttpPost]
-    public async Task InsertProductAsync(Product product)
-    {
-        // Validate the product before inserting
+    public async Task<ActionResult> InsertProductAsync(Product product)
+    {        
+        if (product == null)
+        {
+            return BadRequest("Product cannot be null.");
+        }
+        // Add more validation as needed
+
         await _productService.InsertProductAsync(product);
+
+        return CreatedAtAction(nameof(GetProductByIdAsync), new { id = product.Id }, product);
     }
 }

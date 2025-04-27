@@ -12,7 +12,7 @@ namespace CTTproducts.Services
             _productRepository = productRepository;
         }
 
-        public async Task<Product> GetProductByIdAsync(Guid productId)
+        public async Task<Product?> GetProductByIdAsync(Guid productId)
         {
             if (productId == Guid.Empty)
             {
