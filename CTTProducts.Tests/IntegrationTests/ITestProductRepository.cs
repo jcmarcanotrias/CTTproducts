@@ -6,15 +6,16 @@ namespace CTTProducts.Tests.IntegrationTests;
 
 public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
 {
-    private readonly ProductRepositoryFixture _mongoDbFixture;
+    private readonly ProductRepositoryFixture _productRepositoryFixture;
     private readonly IProductRepository _repository;
     private readonly IMongoCollection<Product> _productCollection;
 
-    public ITestProductRepository(ProductRepositoryFixture mongoDbFixture) 
+    public ITestProductRepository(ProductRepositoryFixture productRepositoryFixture) 
     {
-        _mongoDbFixture = mongoDbFixture;
-        _repository = _mongoDbFixture.Repository;
-        _productCollection = _mongoDbFixture.Database.GetCollection<Product>("Products");
+        _productRepositoryFixture = productRepositoryFixture;
+        _productRepositoryFixture.Init("TestRepo");
+        _repository = _productRepositoryFixture.Repository;
+        _productCollection = _productRepositoryFixture.Database.GetCollection<Product>("Products");
     }
 
     [Fact]

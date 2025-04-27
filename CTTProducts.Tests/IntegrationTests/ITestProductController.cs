@@ -3,11 +3,6 @@ using CTTproducts.Models;
 using CTTproducts.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CTTProducts.Tests.IntegrationTests
 {
@@ -18,6 +13,7 @@ namespace CTTProducts.Tests.IntegrationTests
         public ITestProductController(ProductRepositoryFixture productRepositoryFixture)
         {
             _productRepositoryFixture = productRepositoryFixture;
+            _productRepositoryFixture.Init("TestControllers");
             _productCollection = _productRepositoryFixture.Database.GetCollection<Product>("Products");
         }
 
