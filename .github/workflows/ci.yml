@@ -78,4 +78,4 @@ jobs:
           context: ./publish
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cttproducts
+          tags: ${{ secrets.DOCKER_USER }}/cttproducts:latest
