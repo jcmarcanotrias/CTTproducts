@@ -2,6 +2,7 @@ name: Build, Test, and Publish Artifact
 
 on:
   pull_request:
+    types: [closed]
     branches:
       - master
 
