@@ -1,6 +1,7 @@
 ﻿using CTTproducts.Models;
 using CTTproducts.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace CTTproducts.Controllers;
 
@@ -15,12 +16,14 @@ public class ProductController : ControllerBase, IProductController
         _productService = productService;
     }
 
+    [HttpGet]
     public async Task<Product> GetProductByIdAsync(Guid productId)
     {
         // Validate the productId before fetching
         return await _productService.GetProductByIdAsync(productId);
     }
 
+    [HttpPost]
     public async Task InsertProductAsync(Product product)
     {
         // Validate the product before inserting
