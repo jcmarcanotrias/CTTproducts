@@ -3,14 +3,14 @@ using MongoDB.Driver;
 
 namespace CTTproducts.Repository;
 
-public class ProductsRepository : IProductRepository
+public class ProductRepository : IProductRepository
 {        
     private const string PRODUCTS_COLLECTION_NAME = "Products";
 
     private IMongoDatabase _database;
     private IMongoCollection<Product> _products;
 
-    public ProductsRepository(MongoClient mongoClient, string dataBaseName)
+    public ProductRepository(MongoClient mongoClient, string dataBaseName)
     {
         _database = mongoClient.GetDatabase(dataBaseName);
         _products = _database.GetCollection<Product>(PRODUCTS_COLLECTION_NAME);

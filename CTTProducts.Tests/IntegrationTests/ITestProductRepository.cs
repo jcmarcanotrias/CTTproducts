@@ -4,13 +4,13 @@ using MongoDB.Driver;
 
 namespace CTTProducts.Tests.IntegrationTests;
 
-public class ITestProductsRepository:IClassFixture<MongoDbFixture>
+public class ITestProductRepository:IClassFixture<ProductRepositoryFixture>
 {
-    private readonly MongoDbFixture _mongoDbFixture;
+    private readonly ProductRepositoryFixture _mongoDbFixture;
     private readonly IProductRepository _repository;
     private readonly IMongoCollection<Product> _productCollection;
 
-    public ITestProductsRepository(MongoDbFixture mongoDbFixture) 
+    public ITestProductRepository(ProductRepositoryFixture mongoDbFixture) 
     {
         _mongoDbFixture = mongoDbFixture;
         _repository = _mongoDbFixture.Repository;

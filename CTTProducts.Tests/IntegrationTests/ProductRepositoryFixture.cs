@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace CTTProducts.Tests.IntegrationTests;
 
-public class MongoDbFixture : IDisposable
+public class ProductRepositoryFixture : IDisposable
 {
 
     private const string DATABASE_CONNECTION_STRING = "mongodb://localhost:27017";
@@ -14,7 +14,7 @@ public class MongoDbFixture : IDisposable
     public IProductRepository Repository { get; }
     public IMongoDatabase Database { get; }
 
-    public MongoDbFixture() 
+    public ProductRepositoryFixture() 
     {
         var mongoclient = new MongoClient(DATABASE_CONNECTION_STRING);
         
@@ -22,7 +22,7 @@ public class MongoDbFixture : IDisposable
         var collection = Database.GetCollection<Product>(PRODUCTS_COLLECTION_NAME);
         collection.DeleteMany(_ => true); // Clear the collection before each test
 
-        Repository = new ProductsRepository(mongoclient, DATABASE_NAME);
+        Repository = new ProductRepository(mongoclient, DATABASE_NAME);
     }
 
     public void Dispose()
