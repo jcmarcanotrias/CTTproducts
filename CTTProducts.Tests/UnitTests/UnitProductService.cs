@@ -1,11 +1,15 @@
+﻿using CTTproducts;
 using CTTproducts.Models;
 using CTTproducts.Repository;
+using CTTproducts.Services;
 using Moq;
 
 namespace CTTProducts.Tests.UnitTests;
 
-public class UnitProductsRepository
+public class UnitProductService
 {
+    public UnitProductService() { }
+
     [Fact]
     public async Task GetProductByIdAsync_ReturnsProduct()
     {
@@ -30,8 +34,10 @@ public class UnitProductsRepository
         var mockRepository = new Mock<IProductRepository>();
         mockRepository.Setup(repo => repo.GetProductByIdAsync(productId)).ReturnsAsync(expectedProduct);
 
+        IProductService productService = new ProductService(mockRepository.Object);
+
         // Act  
-        var result = await mockRepository.Object.GetProductByIdAsync(productId);
+        var result = await productService.GetProductByIdAsync(productId);
 
         // Assert  
         Assert.NotNull(result);
@@ -60,12 +66,14 @@ public class UnitProductsRepository
         };
 
         var mockRepository = new Mock<IProductRepository>();
-        mockRepository.Setup(repo => repo.InsertProductAsync(product));
+        mockRepository.Setup(repo => repo.InsertProductAsync(product)).Returns(Task.CompletedTask);
 
-        // Act
-        await mockRepository.Object.InsertProductAsync(product);
+        IProductService mockProductService = new ProductService(mockRepository.Object);
 
-        // Assert
-        mockRepository.Verify(repo => repo.InsertProductAsync(It.Is<Product>(p=> p.Id == product.Id && p.Description == product.Description)), Times.Once);
+        // Act  
+        await mockProductService.InsertProductAsync(product);
+
+        // Assert  
+        mockRepository.Verify(repo => repo.InsertProductAsync(It.Is<Product>(p => p.Id == product.Id)), Times.Once);
     }
 }

@@ -1,87 +1,80 @@
-﻿using CTTproducts;
-using CTTproducts.Models;
+﻿using CTTproducts.Models;
 using CTTproducts.Repository;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CTTProducts.Tests.IntegrationTests
+namespace CTTProducts.Tests.IntegrationTests;
+
+public class ITestProductsRepository:IClassFixture<MongoDbFixture>
 {
-    public class ITestProductsRepository:IClassFixture<MongoDbFixture>
+    private readonly MongoDbFixture _mongoDbFixture;
+    private readonly IProductRepository _repository;
+    private readonly IMongoCollection<Product> _productCollection;
+
+    public ITestProductsRepository(MongoDbFixture mongoDbFixture) 
     {
-        private readonly MongoDbFixture _mongoDbFixture;
-        private readonly IProductRepository _repository;
-        private readonly IMongoCollection<Product> _productCollection;
+        _mongoDbFixture = mongoDbFixture;
+        _repository = _mongoDbFixture.Repository;
+        _productCollection = _mongoDbFixture.Database.GetCollection<Product>("Products");
+    }
 
-        public ITestProductsRepository(MongoDbFixture mongoDbFixture) 
+    [Fact]
+    public async Task GetProductByIdAsync_ReturnsProduct()
+    {
+        // Arrange  
+        var productId = Guid.NewGuid();
+        var product = new Product
         {
-            _mongoDbFixture = mongoDbFixture;
-            _repository = _mongoDbFixture.Repository;
-            _productCollection = _mongoDbFixture.Database.GetCollection<Product>("Products");
-        }
+            Id = productId,
+            Stock = 0,
+            Description = "Test Product 1",
+            Categories =
+               [
+                   new Category
+                   {
+                       Id = Guid.NewGuid(),
+                       Name = "Category 1"
+                   }
+               ],
+            Price = 2.0f
+        };
+                    
+        await _productCollection.InsertOneAsync(product);
 
-        [Fact]
-        public async Task GetProductByIdAsync_ReturnsProduct()
+        // Act  
+        var result = await _repository.GetProductByIdAsync(productId);
+
+        // Assert  
+        Assert.NotNull(result);
+        Assert.Equal(product.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task InsertProductAsync_InsertProduct()
+    {
+        // Arrange
+        var productId = Guid.NewGuid();
+        var product = new Product
         {
-            // Arrange  
-            var productId = Guid.NewGuid();
-            var product = new Product
-            {
-                Id = productId,
-                Stock = 0,
-                Description = "Test Product 1",
-                Categories =
-                   [
-                       new Category
-                       {
-                           Id = Guid.NewGuid(),
-                           Name = "Category 1"
-                       }
-                   ],
-                Price = 2.0f
-            };
-                        
-            await _productCollection.InsertOneAsync(product);
+            Id = productId,
+            Stock = 0,
+            Description = "Test Product 2",
+            Categories =
+               [
+                   new Category
+                   {
+                       Id = Guid.NewGuid(),
+                       Name = "Category 2"
+                   }
+               ],
+            Price = 2.0f
+        };
 
-            // Act  
-            var result = await _repository.GetProductByIdAsync(productId);
+        // Act  
+        await _repository.InsertProductAsync(product);
+        var result = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
 
-            // Assert  
-            Assert.NotNull(result);
-            Assert.Equal(product.Id, result.Id);
-        }
-
-        [Fact]
-        public async Task InsertProductAsync_InsertProduct()
-        {
-            // Arrange
-            var productId = Guid.NewGuid();
-            var product = new Product
-            {
-                Id = productId,
-                Stock = 0,
-                Description = "Test Product 2",
-                Categories =
-                   [
-                       new Category
-                       {
-                           Id = Guid.NewGuid(),
-                           Name = "Category 2"
-                       }
-                   ],
-                Price = 2.0f
-            };
-
-            // Act  
-            await _repository.InsertProductAsync(product);
-            var result = await _productCollection.Find(x => x.Id == productId).FirstOrDefaultAsync();
-
-            // Assert  
-            Assert.NotNull(result);
-            Assert.Equal(product.Id, result.Id);
-        }
+        // Assert  
+        Assert.NotNull(result);
+        Assert.Equal(product.Id, result.Id);
     }
 }
